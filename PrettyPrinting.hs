@@ -11,14 +11,18 @@ instance Pretty Term where
     -- Case that there is only the name for the combinator
     pretty (Comb n []) = n
     -- Makes no sense, guck ich morgen an xD
-    pretty (Comb n [Var (VarName a)]) = n ++ "(" ++ a ++")"
+    pretty (Comb n (t:ts))    = n ++ "(" ++ (pretty t) ++ (rest ts)
+        where rest []     = ")"
+              rest (x:xs) = ", " ++ (pretty x) ++ (rest xs)
 
 instance Pretty Rule where
-    pretty (Rule t []) = pretty t ++ "."
-    pretty (Rule t ts) = pretty t ++ " :- "
+    pretty (Rule n []) = (pretty n) ++ "."
+    pretty (Rule n (t:ts)) = (pretty n) ++ " :- " ++ (pretty t) ++ (rest ts)
+        where rest []     = "."
+              rest (x:xs) = ", " ++ (pretty x) ++ (rest xs)
 
 instance Pretty Prog where
-    pretty (Prog rs) = "Si"
+    pretty (Prog []) = ""
 
 instance Pretty Goal where
-    pretty (Goal ts) = "Yes"
+    pretty (Goal []) = "?- ."
