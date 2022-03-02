@@ -7,18 +7,19 @@ class Vars a where
     allVars :: a -> [VarName]
 
 instance Vars Term where
-    -- Base case
-    allVars (Var a) = [a]
+    -- Base case, just puts VarName into a list
+    allVars (Var a)     = [a]
+    -- Applies allVars on every Term concats all the arrays to one and deletes all duplicates.
     allVars (Comb _ ts) =  nub (concatMap allVars ts)
 
 instance Vars Rule where
-    allVars (Rule n [])     = allVars n
+    -- Applies allVars with same concept as above using the above implementation.
     allVars (Rule n ts) = nub ((allVars n) ++ (concatMap allVars ts))
 
 instance Vars Prog where
-    allVars (Prog [])       = []
-    allVars (Prog rs)   = nub (concatMap allVars rs)
+    -- Applies allVars for rules like above.
+    allVars (Prog rs) = nub (concatMap allVars rs)
 
 instance Vars Goal where
-    allVars (Goal []) = []
+    -- Uses the definition of the instance for Rule above.
     allVars (Goal (t:ts)) = (allVars (Rule t ts))
