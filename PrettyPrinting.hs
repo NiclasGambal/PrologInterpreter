@@ -8,6 +8,10 @@ class Pretty a where
 instance Pretty Term where
     -- Simple gets the name of the variable.
     pretty (Var (VarName a)) = a
+
+    -- The list cases.
+    --pretty (Comb "." ts ) = if (last ts) == (Comb "[]" []) then "bro" else "yo"
+
     -- Case that there is only the name for the combinator
     pretty (Comb n []) = n
     -- Case that the term is made out of multiple terms.
