@@ -1,4 +1,4 @@
-module Substitution (Subst, domain, empty, single, compose) where
+module Substitution (Subst, domain, empty, single) where
 
 import Type
 
@@ -17,7 +17,7 @@ domain (Subst ps) = nub (concatMap comparer ps)
 
 -- Checks if the vars of domain picture themself.
 comparer :: (VarName, Term) -> [VarName]
-comparer (v, t) = if v `elem` allVars t then [] else [v]
+comparer (v, Var n) = if v == n then [] else [v]
 
 -- Creates an empty substitution
 empty :: Subst
@@ -25,15 +25,17 @@ empty = Subst []
 
 -- Creates an substitution which maps only one var on a term
 single :: VarName -> Term -> Subst
+single v (Var n) | v == n = empty
 single v t = Subst[(v,t)]
 
 -- Applies an substitution on a term
---apply :: Subst -> Term -> Term
---apply s t = undefined 
+apply :: Subst -> Term -> Term
+apply (Subst[]) t = t
+apply (Subst ((v,t):rs)) ft = ft
 
 -- Composes two substitutions
-compose :: Subst -> Subst -> Subst
-compose s1 s2 = undefined 
+--compose :: Subst -> Subst -> Subst
+--compose s1 s2 = undefined 
 
 -- Restricts a substitution to a defined domain
 --restrictTo :: Subst -> [VarName] -> Subst
