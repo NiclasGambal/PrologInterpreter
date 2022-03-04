@@ -35,7 +35,7 @@ apply (Subst[]) t = t
 -- Applies a substitution, checking if the substitution var appears in the term, otherwise move to the next.
 apply (Subst ((v,t):rs)) (Var n) = if v == n then t else apply (Subst rs) (Var n)
 -- Keeps the frame of the Term just apply the substitution on equal named VarNames.
-apply (Subst ps) (Comb n ts) = (Comb n (map (apply (Subst ps)) ts))
+apply s (Comb n ts) = (Comb n (map (apply s) ts))
 
 -- Composes two substitutions
 compose :: Subst -> Subst -> Subst
