@@ -13,29 +13,21 @@ instance Pretty Term where
     -- The list cases.
     --pretty (Comb "." ts ) = if (last ts) == (Comb "[]" []) then "bro" else "yo"
 
-    -- Case that there is only the name for the combinator
+    -- Case that there is only the functor for the term
     pretty (Comb n []) = n
-    -- Case that the term is made out of multiple terms.
+    -- Case that the term is made out of multiple terms, using intercalate to integrate the ", " between the terms.
     pretty (Comb n ts) = n ++ "(" ++ intercalate ", " (map (\t -> pretty t) ts) ++ ")"
 
 instance Pretty Rule where
     -- Basic case with no extra terms coming with that rule.
-    pretty (Rule n []) = (pretty n) ++ "."
+    pretty (Rule n []) = pretty n ++ "."
     -- Case for extra terms, describing the rule.
-    pretty (Rule n ts) = (pretty n) ++ " :- " ++ intercalate ", " (map (\t -> pretty t) ts) ++"."
+    pretty (Rule n ts) = pretty n ++ " :- " ++ intercalate ", " (map (\t -> pretty t) ts) ++ "."
 
 instance Pretty Prog where
-    -- Base case again
-    pretty (Prog []) = ""
     -- Same pattern as in the upper examples.
-    pretty (Prog (r:rs))  = (pretty r) ++ (rest rs)
-        where rest []     = ""
-              rest (x:xs) =  "\n" ++ (pretty x) ++ rest (xs)
+    pretty (Prog rs)  = intercalate "\n" (map (\r -> pretty r) rs)
 
 instance Pretty Goal where
-    -- Basic case it is.
-    pretty (Goal []) = "?- ."
-    -- Suprise! Again the same pattern, I'll work on an improvement soon.
-    pretty (Goal (t:ts))  = "?- " ++ (pretty t) ++ (rest ts)
-        where rest []     = "."
-              rest (x:xs) = ", " ++ (pretty x) ++ (rest xs)
+    -- Suprise! Again the same pattern.
+    pretty (Goal ts)  = "?- " ++ intercalate ", " (map (\t -> pretty t) ts) ++ "."

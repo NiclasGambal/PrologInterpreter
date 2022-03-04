@@ -14,7 +14,7 @@ instance Vars Term where
 
 instance Vars Rule where
     -- Applies allVars with same concept as above using the above implementation.
-    allVars (Rule n ts) = nub ((allVars n) ++ (concatMap allVars ts))
+    allVars (Rule n ts) = nub (allVars n ++ concatMap allVars ts)
 
 instance Vars Prog where
     -- Applies allVars for rules like above.
@@ -22,7 +22,7 @@ instance Vars Prog where
 
 instance Vars Goal where
     -- Uses the definition of the instance for Rule above.
-    allVars (Goal (t:ts)) = (allVars (Rule t ts))
+    allVars (Goal (t:ts)) = allVars (Rule t ts)
 
 -- Creates an endless list of variables matching the pattern of the assignment with lists comprehensions.
 freshVars :: [VarName]

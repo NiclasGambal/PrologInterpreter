@@ -37,12 +37,12 @@ apply (Subst[]) t = t
 -- Applies a substitution, checking if the substitution var appears in the term, otherwise move to the next.
 apply (Subst ((v,t):rs)) (Var n) = if v == n then t else apply (Subst rs) (Var n)
 -- Keeps the frame of the Term just apply the substitution on equal named VarNames.
-apply s (Comb n ts) = (Comb n (map (apply s) ts))
+apply s (Comb n ts) = Comb n (map (apply s) ts)
 
 -- Composes two substitutions
 compose :: Subst -> Subst -> Subst
 compose (Subst s1) (Subst s2) = Subst (appliedSet ++ filteredSet) where
-    -- Applies substitution 1 to every term  of the substitutions in 2.
+    -- Applies substitution 1 to every term  of the substitutions in 2 and filters ids.
     appliedSet = filter (\(v,t) -> Var v /= t) (map (\(v, t) -> (v, apply (Subst s1) t)) s2)
     -- filter the elements where the Var from substitution 1 is the same as in substitution 2.
     filteredSet = filter (\(v,_) -> (not (elem v (domain (Subst s2))))) s1
@@ -54,12 +54,13 @@ restrictTo (Subst []) _ = empty
 -- if a var is in the domain, keep this var and move on, otherwise ignore that var and move on.
 restrictTo (Subst s) dm = Subst (filter (\(v,t) -> elem v dm) s)
 
--- Instance of Subst of classtype Pretty
 instance Pretty Subst where
+    -- Use intercalate for the inserted ", " and maps pretty on the substitutions.
     pretty (Subst ps) = "{" ++ intercalate ", " (map (\(v,t) -> pretty (Var v) ++ " -> " ++ pretty t) ps) ++ "}"
 
 instance Vars Subst where
     allVars (Subst[]) = []
+    -- Just applies allVars on the single parts of the tuples and eliminates all duplicates.
     allVars (Subst ((v,t):rs)) = nub (allVars (Var v) ++ (allVars t) ++ (allVars (Subst rs)))
 
 instance Arbitrary Subst where
