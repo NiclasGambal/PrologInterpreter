@@ -40,11 +40,10 @@ apply s (Comb n ts) = (Comb n (map (apply s) ts))
 -- Composes two substitutions
 compose :: Subst -> Subst -> Subst
 compose (Subst s1) (Subst s2) = Subst (appliedSet ++ filteredSet) where
-    -- Applies substitution 1 to every term substitution in 2.
-    appliedSet = (map (\(v, t) -> (v, apply (Subst s1) t)) s2)
+    -- Applies substitution 1 to every term  of the substitutions in 2.
+    appliedSet = map (\(v, t) -> (v, apply (Subst s1) t)) s2
     -- filter the elements where the Var from substitution 1 is the same as in substitution 2.
-    {- Notiz: Mit domain statt fst lösen. -}
-    filteredSet = filter (\(v,_) -> (not (elem v (map fst s2)))) s1
+    filteredSet = filter (\(v,_) -> (not (elem v (domain (Subst s2))))) s1
 
 -- Restricts a substitution to a defined domain
 restrictTo :: Subst -> [VarName] -> Subst
@@ -61,3 +60,7 @@ instance Pretty Subst where
 -- Help function for Pretty instance
 substDisplayer :: (VarName, Term) -> String
 substDisplayer (v,t) = pretty (Var v) ++ " -> " ++ pretty t
+
+instance Vars Subst where
+    allVars (Subst[]) = []
+    allVars (Subst ((v,t):rs)) = nub (allVars (Var v) ++ (allVars t) ++ (allVars (Subst rs)))
