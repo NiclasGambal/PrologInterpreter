@@ -18,6 +18,7 @@ domain (Subst ps) = concatMap comparer ps
 -- Checks if the vars of domain picture themself.
 comparer :: (VarName, Term) -> [VarName]
 comparer (v, Var n) = if v == n then [] else [v]
+comparer (v, t) = [v]
 
 -- Creates an empty substitution
 empty :: Subst
