@@ -56,12 +56,7 @@ restrictTo (Subst s) dm = Subst (filter (\(v,t) -> elem v dm) s)
 
 -- Instance of Subst of classtype Pretty
 instance Pretty Subst where
-    pretty (Subst []) = "{}"
-    pretty (Subst ps) = "{" ++ intercalate ", " (map substDisplayer ps) ++ "}"
-
--- Help function for Pretty instance
-substDisplayer :: (VarName, Term) -> String
-substDisplayer (v,t) = pretty (Var v) ++ " -> " ++ pretty t
+    pretty (Subst ps) = "{" ++ intercalate ", " (map (\(v,t) -> pretty (Var v) ++ " -> " ++ pretty t) ps) ++ "}"
 
 instance Vars Subst where
     allVars (Subst[]) = []
