@@ -1,0 +1,22 @@
+$ git status
+## Ganz nett für ne Übersicht ##
+
+Vorm arbeiten:
+
+$ git pull
+## Zieht sich alle Änderungen die online sind ##
+
+
+Wenn fertig mit arbeiten:
+
+$ git commit -am "Kommentar zu den Änderungen" 
+## Bestätigen und kommentieren der Änderungen ##
+
+$ git push # 
+## Pusht die Änderungen online ##
+
+
+Wenn nichts wichtiges hinzugefügt wurde:
+
+$ git reset --hard 
+## Setzt alle lokalen Änderungen zurück ##

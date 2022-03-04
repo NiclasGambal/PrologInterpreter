@@ -6,6 +6,7 @@ import PrettyPrinting
 
 import Vars
 import Data.List
+import Test.QuickCheck
 
 data Subst = Subst[(VarName, Term)]
     deriving Show
@@ -65,3 +66,6 @@ substDisplayer (v,t) = pretty (Var v) ++ " -> " ++ pretty t
 instance Vars Subst where
     allVars (Subst[]) = []
     allVars (Subst ((v,t):rs)) = nub (allVars (Var v) ++ (allVars t) ++ (allVars (Subst rs)))
+
+instance Arbitrary Subst where
+    arbitrary = undefined
