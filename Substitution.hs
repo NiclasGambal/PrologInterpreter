@@ -13,7 +13,7 @@ data Subst = Subst[(VarName, Term)]
 -- Returns the domain of the substitution
 domain :: Subst -> [VarName]
 -- Gets all first elements of the substitution. 
-domain (Subst ps) = nub (concatMap comparer ps)
+domain (Subst ps) = concatMap comparer ps
 
 -- Checks if the vars of domain picture themself.
 comparer :: (VarName, Term) -> [VarName]
@@ -43,6 +43,7 @@ compose (Subst s1) (Subst s2) = Subst (appliedSet ++ filteredSet) where
     -- Applies substitution 1 to every term substitution in 2.
     appliedSet = (map (\(v, t) -> (v, apply (Subst s1) t)) s2)
     -- filter the elements where the Var from substitution 1 is the same as in substitution 2.
+    {- Notiz: Mit domain statt fst lösen. -}
     filteredSet = filter (\(v,_) -> (not (elem v (map fst s2)))) s1
 
 -- Restricts a substitution to a defined domain
@@ -50,11 +51,13 @@ restrictTo :: Subst -> [VarName] -> Subst
 -- Base case, restriction doesnt matter.
 restrictTo (Subst []) _ = empty
 -- if a var is in the domain, keep this var and move on, otherwise ignore that var and move on.
-restrictTo (Subst (p:ps)) dm | (elem (fst p) dm) = let Subst xs = restrictTo (Subst ps) dm in (Subst (p:xs))
-                             | otherwise = restrictTo (Subst ps) dm
+restrictTo (Subst s) dm = Subst (filter (\(v,t) -> elem v dm) s)
 
 -- Instance of Subst of classtype Pretty
 instance Pretty Subst where
     pretty (Subst []) = "{}"
-    pretty (Subst ((v,t):ps)) = "{" ++ (pretty (Var v)) ++ " -> " ++ (pretty t) ++"}"
-        where rest = undefined 
+    pretty (Subst ps) = "{" ++ intercalate ", " (map substDisplayer ps) ++ "}"
+
+-- Help function for Pretty instance
+substDisplayer :: (VarName, Term) -> String
+substDisplayer (v,t) = pretty (Var v) ++ " -> " ++ pretty t
