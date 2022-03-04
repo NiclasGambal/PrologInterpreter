@@ -1,4 +1,4 @@
-module Substitution (Subst, domain, empty, single) where
+module Substitution (Subst, domain, empty, single, apply, compose, restrictTo) where
 
 import Type
 
@@ -40,7 +40,7 @@ apply (Subst ps) (Comb n ts) = (Comb n (map (apply (Subst ps)) ts))
 -- Composes two substitutions
 compose :: Subst -> Subst -> Subst
 compose (Subst s1) (Subst s2) = Subst (appliedSet ++ filteredSet) where
-    -- Applies substitution 1 to every substitution in 2.
+    -- Applies substitution 1 to every term substitution in 2.
     appliedSet = (map (\(v, t) -> (v, apply (Subst s1) t)) s2)
     -- filter the elements where the Var from substitution 1 is the same as in substitution 2.
     filteredSet = filter (\(v,_) -> (not (elem v (map fst s2)))) s1
@@ -56,3 +56,5 @@ restrictTo (Subst (p:ps)) dm | (elem (fst p) dm) = let Subst xs = restrictTo (Su
 -- Instance of Subst of classtype Pretty
 instance Pretty Subst where
     pretty (Subst []) = "{}"
+    pretty (Subst ((v,t):ps)) = "{" ++ (pretty (Var v)) ++ " -> " ++ (pretty t) ++"}"
+        where rest = undefined 
