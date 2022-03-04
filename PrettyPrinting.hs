@@ -1,6 +1,7 @@
 module PrettyPrinting (Pretty, pretty) where
 
 import Type
+import Data.List
 
 class Pretty a where
     pretty :: a -> String
@@ -15,17 +16,13 @@ instance Pretty Term where
     -- Case that there is only the name for the combinator
     pretty (Comb n []) = n
     -- Case that the term is made out of multiple terms.
-    pretty (Comb n (t:ts)) = n ++ "(" ++ (pretty t) ++ (rest ts)
-        where rest []      = ")"
-              rest (x:xs)  = ", " ++ (pretty x) ++ (rest xs)
+    pretty (Comb n ts) = n ++ "(" ++ intercalate ", " (map (\t -> pretty t) ts) ++ ")"
 
 instance Pretty Rule where
     -- Basic case with no extra terms coming with that rule.
     pretty (Rule n []) = (pretty n) ++ "."
     -- Case for extra terms, describing the rule.
-    pretty (Rule n (t:ts)) = (pretty n) ++ " :- " ++ (pretty t) ++ (rest ts)
-        where rest []      = "."
-              rest (x:xs)  = ", " ++ (pretty x) ++ (rest xs)
+    pretty (Rule n ts) = (pretty n) ++ " :- " ++ intercalate ", " (map (\t -> pretty t) ts) ++"."
 
 instance Pretty Prog where
     -- Base case again
