@@ -41,7 +41,7 @@ apply s (Comb n ts) = (Comb n (map (apply s) ts))
 compose :: Subst -> Subst -> Subst
 compose (Subst s1) (Subst s2) = Subst (appliedSet ++ filteredSet) where
     -- Applies substitution 1 to every term  of the substitutions in 2.
-    appliedSet = map (\(v, t) -> (v, apply (Subst s1) t)) s2
+    appliedSet = filter (\(v,t) -> Var v /= t) (map (\(v, t) -> (v, apply (Subst s1) t)) s2)
     -- filter the elements where the Var from substitution 1 is the same as in substitution 2.
     filteredSet = filter (\(v,_) -> (not (elem v (domain (Subst s2))))) s1
 
