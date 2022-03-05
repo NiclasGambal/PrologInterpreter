@@ -20,3 +20,5 @@ Wenn nichts wichtiges hinzugefügt wurde:
 
 $ git reset --hard 
 ## Setzt alle lokalen Änderungen zurück ##
+
+$ git add filename
