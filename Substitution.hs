@@ -64,4 +64,6 @@ instance Vars Subst where
     allVars (Subst ((v,t):rs)) = nub (allVars (Var v) ++ (allVars t) ++ (allVars (Subst rs)))
 
 instance Arbitrary Subst where
-    arbitrary = undefined
+    arbitrary = do x <- arbitrary 
+                   y <- arbitrary 
+                   return (Subst [(x, y)])
