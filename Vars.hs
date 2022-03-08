@@ -1,6 +1,6 @@
 module Vars where
 
-import Type 
+import Type
 import Data.List
 
 class Vars a where
@@ -23,7 +23,8 @@ instance Vars Prog where
 instance Vars Goal where
     -- Uses the definition of the instance for Rule above.
     allVars (Goal (t:ts)) = allVars (Rule t ts)
+    allVars (Goal [])     = []
 
 -- Creates an endless list of variables matching the pattern of the assignment with lists comprehensions.
 freshVars :: [VarName]
-freshVars = [(VarName (x : "")) | x <- ['A' .. 'Z']] ++ [(VarName (x : show y)) | y <- [0 ..], x <- ['A' .. 'Z']]
+freshVars = [(VarName (x : "")) | x <- ['A' .. 'Z']] ++ [(VarName (x : show y)) | y <- ['0'..], x <- ['A' .. 'Z']]

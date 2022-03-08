@@ -13,13 +13,13 @@ data Subst = Subst[(VarName, Term)]
 
 -- Returns the domain of the substitution
 domain :: Subst -> [VarName]
--- Gets all first elements of the substitution. 
+-- Gets all first elements of the substitution.
 domain (Subst ps) = concatMap comparer ps
 
 -- Checks if the vars of domain picture themself.
 comparer :: (VarName, Term) -> [VarName]
 comparer (v, Var n) = if v == n then [] else [v]
-comparer (v, t) = [v]
+comparer (v, _) = [v]
 
 -- Creates an empty substitution
 empty :: Subst
@@ -52,7 +52,7 @@ restrictTo :: Subst -> [VarName] -> Subst
 -- Base case, restriction doesnt matter.
 restrictTo (Subst []) _ = empty
 -- if a var is in the domain, keep this var and move on, otherwise ignore that var and move on.
-restrictTo (Subst s) dm = Subst (filter (\(v,t) -> elem v dm) s)
+restrictTo (Subst s) dm = Subst (filter (\(v,_) -> elem v dm) s)
 
 instance Pretty Subst where
     -- Use intercalate for the inserted ", " and maps pretty on the substitutions.
@@ -64,6 +64,6 @@ instance Vars Subst where
     allVars (Subst ((v,t):rs)) = nub (allVars (Var v) ++ (allVars t) ++ (allVars (Subst rs)))
 
 instance Arbitrary Subst where
-    arbitrary = do x <- arbitrary 
-                   y <- arbitrary 
+    arbitrary = do x <- arbitrary
+                   y <- arbitrary
                    return (Subst [(x, y)])
