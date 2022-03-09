@@ -9,7 +9,7 @@ import Data.List
 import Test.QuickCheck
 
 data Subst = Subst[(VarName, Term)]
-    deriving Show
+    deriving (Show, Eq)
 
 -- Returns the domain of the substitution
 domain :: Subst -> [VarName]

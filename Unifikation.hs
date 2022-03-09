@@ -13,8 +13,8 @@ import Test.QuickCheck
 
 
 ds :: Term -> Term -> Maybe (Term, Term)
-ds (Var vn1)      t2             = if (t2 == (Var vn1)) then Nothing else (Just ((Var vn1), t2))
-ds t2             (Var vn1)      = if (t2 == (Var vn1)) then Nothing else (Just ((Var vn1), t2))
+ds (Var vn1)      t2             = if ((t2 == (Var vn1)) || (t2 == (Var (VarName "_"))) || (vn1 == (VarName "_"))) then Nothing else (Just ((Var vn1), t2))
+ds t2             (Var vn1)      = if ((t2 == (Var vn1)) || (t2 == (Var (VarName "_"))) || (vn1 == (VarName "_"))) then Nothing else (Just ((Var vn1), t2))
 ds (Comb cn1 ts1) (Comb cn2 ts2) = if ((cn1 == cn2) && ((length ts1 == length ts2))) then (getFirstDs ts1 ts2) else (Just ((Comb cn1 ts1), (Comb cn2 ts2)))
   where
     getFirstDs []       []       = Nothing
