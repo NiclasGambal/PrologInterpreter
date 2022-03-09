@@ -1,9 +1,11 @@
 {-# LANGUAGE TemplateHaskell #-}
 import Test.QuickCheck
+import PrettyPrinting
 import Substitution
 import Type
 import Vars
 import Unifikation
+import Umbenennung
 import Data.List
 
 -- Method to check if a list is a subset of another list.
@@ -81,10 +83,27 @@ prop_u2 t1 t2 = ds t1 t2 /= Nothing ==> t1 /= t2
 prop_u3 :: Term -> Term -> Property
 prop_u3 t1 t2 = ds t1 t2 == Nothing ==> unify t1 t2 /= Nothing && domain (dontBeAMaybeSubst (unify t1 t2)) == []
 
-prop_u4 :: Term -> Term -> Property
-prop_u4 t1 t2 = unify t1 t2 /= Nothing ==> ds (apply (dontBeAMaybeSubst (unify t1 t2)) t1) (apply (dontBeAMaybeSubst (unify t1 t2)) t2) == Nothing
+--prop_u4 :: Term -> Term -> Property
+--prop_u4 t1 t2 = unify t1 t2 /= Nothing ==> ds (apply (dontBeAMaybeSubst (unify t1 t2)) t1) (apply (dontBeAMaybeSubst (unify t1 t2)) t2) == Nothing
+
+
+-- Tests für Umbenennung
+prop_um1 :: [VarName] -> Rule -> Bool
+prop_um1 xs r = (intersect (allVars (rename xs r)) (allVars r)) == []
+
+prob_um2 :: [VarName] -> Rule -> Bool
+prob_um2 xs r = (intersect (allVars (rename xs r)) xs) == []
+
+prob_um3 :: [VarName] -> Rule -> Bool
+prob_um3 xs r = not (elem (VarName "_") (allVars (rename xs r)))
+
+prob_um4 :: [VarName] -> Rule -> Property
+prob_um4 xs r = not (elem (VarName "_") (allVars r)) ==> (length (allVars (rename xs r))) == (length (allVars r))
+
+prob_um5 :: [VarName] -> Rule -> Bool
+prob_um5 xs r = (length (allVars (rename xs r))) >= (length (allVars r))
+
 
 return []
-
 runTests :: IO Bool
 runTests = $quickCheckAll

@@ -2,14 +2,7 @@ module Unifikation where
 
 import Type
 
-import PrettyPrinting
-
-import Vars
-
 import Substitution
-
-import Data.List
-import Test.QuickCheck
 
 
 ds :: Term -> Term -> Maybe (Term, Term)
