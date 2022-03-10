@@ -1,6 +1,7 @@
 module Unifikation where
 
 import Type
+import Vars
 
 import Substitution
 
@@ -19,8 +20,8 @@ unify :: Term -> Term -> Maybe Subst
 unify t1 t2 = unifyAkk t1 t2 (ds t1 t2)
   where
     unifyAkk _  _  Nothing               = (Just empty)
-    unifyAkk x1 x2 (Just ((Var vn), tx)) = combineUnify (single vn tx) (unify (apply (single vn tx) x1) (apply (single vn tx) x2))
-    unifyAkk x1 x2 (Just (tx, (Var vn))) = combineUnify (single vn tx) (unify (apply (single vn tx) x1) (apply (single vn tx) x2))
+    unifyAkk x1 x2 (Just ((Var vn), tx)) = if (elem vn (allVars tx)) then Nothing else combineUnify (single vn tx) (unify (apply (single vn tx) x1) (apply (single vn tx) x2))
+    unifyAkk x1 x2 (Just (tx, (Var vn))) = if (elem vn (allVars tx)) then Nothing else combineUnify (single vn tx) (unify (apply (single vn tx) x1) (apply (single vn tx) x2))
     unifyAkk _  _  _                     = Nothing
     combineUnify :: Subst -> Maybe Subst -> Maybe Subst
     combineUnify _ Nothing = Nothing

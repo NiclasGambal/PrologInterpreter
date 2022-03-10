@@ -1,4 +1,4 @@
-module Substitution (Subst, domain, empty, single, apply, compose, restrictTo) where
+module Substitution (Subst(Subst), domain, empty, single, apply, compose, restrictTo) where
 
 import Type
 
@@ -8,7 +8,7 @@ import Vars
 import Data.List
 import Test.QuickCheck
 
-data Subst = Subst[(VarName, Term)]
+data Subst = Subst [(VarName, Term)]
     deriving (Show, Eq)
 
 -- Returns the domain of the substitution
@@ -33,7 +33,7 @@ single v t = Subst[(v,t)]
 
 -- Applies an substitution on a term
 apply :: Subst -> Term -> Term
-apply (Subst[]) t = t
+apply (Subst []) t = t
 -- Applies a substitution, checking if the substitution var appears in the term, otherwise move to the next.
 apply (Subst ((v,t):rs)) (Var n) = if v == n then t else apply (Subst rs) (Var n)
 -- Keeps the frame of the Term just apply the substitution on equal named VarNames.
