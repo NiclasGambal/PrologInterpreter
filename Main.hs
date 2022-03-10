@@ -72,3 +72,12 @@ eval prog _ "s dfs" = do
 eval prog _ "s bfs" = do
     putStrLn "bfs!"
     repl_loop prog bfs
+eval prog strat ('l':' ':file) = do
+    x <- parseFile file
+    case x of
+        (Left str) -> do
+            putStrLn str
+            repl_loop file strat
+        (Right a) -> do
+            putStrLn "Error!"
+            repl_loop prog strat

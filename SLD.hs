@@ -13,7 +13,7 @@ type Strategy = SLDTree -> [Subst]
 
 sld :: Prog -> Goal -> SLDTree
 sld _ (Goal []) = Node (Goal []) []
-sld r g = Node g (nodes p g) (concatMap nodes p )
+sld (Prog (r:rs)) g = Node g (nodes p g) (concatMap nodes p )
 
 nodes :: Prog -> Goal -> [(Subst, SLDTree)]
 nodes (Prog (r:rs)) g = [(createSubst r g, sld)] ++ nodes (Prog rs) g
