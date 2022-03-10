@@ -10,17 +10,24 @@ data SLDTree = Node Goal [(Subst, SLDTree)]
     deriving Show
 
 type Strategy = SLDTree -> [Subst]
-{-
+
 sld :: Prog -> Goal -> SLDTree
-sld (Prog (r:rs)) (Goal (t:ts)) = Node (Goal (t:ts)) [let s = unifyGoals r  (Goal (t:ts)) in s, sld (Prog r:rs) applyOnAll s (Goal (t:ts))] ++ (next (Prog rs) (Goal t:ts))
+sld _ (Goal []) = Node (Goal []) []
+sld p g = Node g (nodes p g)
 
-next :: Prog -> Goal -> [(Subst, SLDTree)]
-next (Prog []) _ = []
-next (Prog r:rs ) g = (let s = unifyGoals r  (Goal (t:ts)) in s,sld (Prog r:rs applyOnAll s g) ++ next (Prog rs) g
+nodes :: Prog -> Goal -> [(Subst, SLDTree)]
+nodes (Prog (r:rs)) g = [(createSubst r g, sld)] ++ nodes (Prog rs) g
 
-applyOnAll :: Subst -> Goal -> Goal
-applyOnAll s (Goal ts) = Goal (map (apply s ) ts)
--}
+rightSide :: Rule -> Rule 
+rightSide (Rule r ts) =
+
+createSubst :: Rule -> Goal -> Subst
+createSubst (Rule t1 _) (Goal (t:ts)) = dontBeAMaybeSubst (unify t1 t)
+--sameName :: Idee vergleichen ob Rule t gleich t aus Goal
+
+applySubst :: Subst -> Term -> Rule
+applySubst s r (Rule )= if apply s r == 
+
 
 unifyGoals :: Rule -> Goal -> Subst
 unifyGoals _ (Goal []) = empty
