@@ -2,6 +2,8 @@ module SLD where
 
 import Type
 
+import Vars
+import Umbenennung
 import Substitution
 
 import Unifikation
@@ -9,43 +11,31 @@ import Unifikation
 data SLDTree = Node Goal [(Subst, SLDTree)]
     deriving Show
 
-type Strategy = SLDTree -> [Subst]
 
 sld :: Prog -> Goal -> SLDTree
-sld _ (Goal []) = Node (Goal []) []
-sld (Prog (r:rs)) g = Node g (nodes p g) (concatMap nodes p )
+sld p g = sldRename (allVars g) p g
 
-nodes :: Prog -> Goal -> [(Subst, SLDTree)]
-nodes (Prog (r:rs)) g = [(createSubst r g, sld)] ++ nodes (Prog rs) g
+sldRename :: [VarName] -> Prog -> Goal -> SLDTree
+sldRename vn (Prog rs) g = sldRenamed vn (Prog (map (\r -> (rename vn r)) rs)) g
 
-rightSide :: Rule -> Rule 
-rightSide (Rule r ts) =
+sldRenamed :: [VarName] -> Prog -> Goal -> SLDTree
+sldRenamed _  _            (Goal []) = Node (Goal []) []
+-- versuche, das Regelset auf jeden Term anzuwenden
+sldRenamed vn (Prog rules) (Goal ts) = Node (Goal ts) (concatMap (\oneTerm -> (concatMap (\oneRule -> (tryRule vn (Prog rules) (Goal ts) oneRule oneTerm)) rules)) ts)
 
-createSubst :: Rule -> Goal -> Subst
-createSubst (Rule t1 _) (Goal (t:ts)) = dontBeAMaybeSubst (unify t1 t)
---sameName :: Idee vergleichen ob Rule t gleich t aus Goal
+--tryRules :: [Rule] -> Goal -> Term -> [(Subst, SLDTree)]
+--tryRules []     _  _ = []
+--tryRules (r:rs) ts t = [(empty, (Node (Goal [t]) []))] ++ tryRules rs ts t
 
-applySubst :: Subst -> Term -> Rule
-applySubst s r (Rule )= if apply s r == 
+tryRule:: [VarName] -> Prog -> Goal -> Rule -> Term -> [(Subst, SLDTree)]
+tryRule vn p (Goal ts) (Rule rHead rTail) t = if ((unify rHead t) == Nothing) then [] else [(dontBeAMaybeSubst (unify rHead t), sldRename (vn ++ (allVars (Goal (map (apply (dontBeAMaybeSubst (unify rHead t))) rTail)))) p (Goal ((filter (/= t) ts) ++ (map (apply (dontBeAMaybeSubst (unify rHead t))) rTail))))]
+--(sld p (Goal ((filter (/= t) ts) ++ (map (apply (dontBeAMaybeSubst (unify rHead t))) rTail))) ))]
 
+--tryRule :: Rule -> [Term] -> Term -> [(Subst, SLDTree)]
+--tryRule (Rule rHead rTail) t = if (unify rHead t) == Nothing then [] else [(dontBeAMaybeSubst (unify rHead t), )]
 
-unifyGoals :: Rule -> Goal -> Subst
-unifyGoals _ (Goal []) = empty
-unifyGoals (Rule r rs) (Goal (t:ts)) =  compose (dontBeAMaybeSubst (unify r t)) (unifyGoals (Rule r rs) (Goal ts))
 
 -- Method to take the Substitution out of a Maybe Substitution
 dontBeAMaybeSubst :: Maybe Subst -> Subst
 dontBeAMaybeSubst Nothing    = empty
 dontBeAMaybeSubst (Just sub) = sub
-
-{-
-dfs :: Strategy
-dfs (Node (Goal []) _) = [empty]
-dfs (Node _ []) = []
-
-bfs :: Strategy
-bfs = undefined 
-
-solveWith :: Prog -> Goal -> Strategy -> [Subst]
-solveWith p g strat = strat (sld p g)
--}
