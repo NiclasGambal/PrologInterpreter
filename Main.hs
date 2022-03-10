@@ -3,6 +3,8 @@ module Main where
 import Type
 import SLD
 import Parser
+import Substitution
+import PrettyPrinting
 
 main :: IO ()
 main = do
@@ -68,5 +70,5 @@ eval prog _ "s dfs" = do
     putStrLn "dfs!"
     repl_loop prog dfs
 eval prog _ "s bfs" = do
-    putStrLN "bfs!"
+    putStrLn "bfs!"
     repl_loop prog bfs

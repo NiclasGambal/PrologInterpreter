@@ -1,13 +1,11 @@
 {-# LANGUAGE TemplateHaskell #-}
 import Test.QuickCheck
-import PrettyPrinting
 import Substitution
 import Type
 import Vars
 import Unifikation
 import Umbenennung
 import Data.List
-import Debug.Trace
 
 -- Method to check if a list is a subset of another list.
 isSublistOf :: Eq a => [a] -> [a] -> Bool
