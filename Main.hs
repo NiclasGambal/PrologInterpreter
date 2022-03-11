@@ -16,7 +16,7 @@ repl_loop :: Prog -> Strategy -> IO ()
 repl_loop prog strat = do
     putStr "?- "
     str <- getLine
-    rep prog strat str
+    eval_loop prog strat str
 
 eval_loop :: Prog -> Strategy -> String -> IO ()
 eval_loop prog strat (':':str) = eval prog strat str
@@ -27,7 +27,7 @@ eval_loop prog strat str = do
             putStrLn s
             repl_loop prog strat
         (Right goal) -> do
-            returnResults (solveWith prog goal)
+            returnResults (solveWith prog goal strat)
             repl_loop prog strat
 
 returnResults :: [Subst] -> IO ()
@@ -46,7 +46,7 @@ parseInput ('.':_) _ = do
 parseInput (';':_) [] = do
     putStrLn "false."
     return ()
-parseInput ";" subs = returnResults subs
+parseInput ";" (s:ss) = returnResults ss
 parseInput (';':xs) (s:ss) = do
     putStrLn (pretty s)
     parseInput xs ss
@@ -69,15 +69,18 @@ eval _ _ ('q':_) = do
 eval prog _ "s dfs" = do
     putStrLn "dfs!"
     repl_loop prog dfs
-eval prog _ "s bfs" = do
-    putStrLn "bfs!"
-    repl_loop prog bfs
+--eval prog _ "s bfs" = do
+--    putStrLn "bfs!"
+--    repl_loop prog bfs
 eval prog strat ('l':' ':file) = do
     x <- parseFile file
     case x of
         (Left str) -> do
             putStrLn str
-            repl_loop file strat
-        (Right a) -> do
-            putStrLn "Error!"
             repl_loop prog strat
+        (Right p) -> do
+            putStrLn "Loaded!"
+            repl_loop p strat
+eval prog strat ('p':_) = do
+    putStrLn (pretty prog)
+    repl_loop prog strat
