@@ -18,9 +18,9 @@ repl_loop prog strat = do
     str <- getLine
     rep prog strat str
 
-rep :: Prog -> Strategy -> String -> IO ()
-rep prog strat (':':str) = eval prog strat str
-rep prog strat str = do
+eval_loop :: Prog -> Strategy -> String -> IO ()
+eval_loop prog strat (':':str) = eval prog strat str
+eval_loop prog strat str = do
     let x = parse str
     case x of
         (Left s) -> do

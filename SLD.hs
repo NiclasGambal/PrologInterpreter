@@ -17,7 +17,7 @@ data SLDTree = Node Goal [(Subst, SLDTree)]
 sld :: Prog -> Goal -> SLDTree
 sld _            (Goal []) = Node (Goal []) []
 -- versuche, das Regelset auf jeden Term anzuwenden
-sld (Prog rules) (Goal ts) = Node (Goal ts) (concatMap (\oneTerm -> (concatMap (\oneRule -> (tryRule (Prog rules) (Goal ts) (rename ((allVars (Prog rules)) ++ (allVars (Goal ts))) oneRule) oneTerm)) rules)) ts)
+sld (Prog rules) (Goal (t:ts)) = Node (Goal (t:ts)) (concatMap (\oneRule -> (tryRule (Prog rules) (Goal (t:ts)) (rename ((allVars (Prog rules)) ++ (allVars (Goal (t:ts)))) oneRule) t)) rules)
 
 
 tryRule:: Prog -> Goal -> Rule -> Term -> [(Subst, SLDTree)]
