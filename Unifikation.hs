@@ -2,7 +2,6 @@ module Unifikation where
 
 import Type
 import Vars
-
 import Substitution
 
 -- calculates the disagreement-set of two terms

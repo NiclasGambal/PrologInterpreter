@@ -1,11 +1,9 @@
 module SLD where
 
 import Type
-
 import Vars
 import Umbenennung
 import Substitution
-
 import Unifikation
 
 data SLDTree = Node Goal [(Subst, SLDTree)]
@@ -26,7 +24,6 @@ tryRule :: [VarName] -> Prog -> Goal -> Rule -> Term -> [(Subst, SLDTree)]
 tryRule vn p (Goal ts) (Rule rHead rTail) t = case unify rHead t of
                                                 Nothing -> []
                                                 Just s ->  [(s, sldRename (vn ++ (allVars (Rule rHead rTail))) p (Goal (map (apply s) (filter (/= t) ts ++ rTail))))]
-
 
 
 -- Method to take the Substitution out of a Maybe Substitution
