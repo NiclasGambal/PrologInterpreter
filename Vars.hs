@@ -1,7 +1,7 @@
 module Vars where
 
 import Type
-import Data.List
+import ListFunctions
 
 class Vars a where
     allVars :: a -> [VarName]

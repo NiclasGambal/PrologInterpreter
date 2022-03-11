@@ -1,11 +1,9 @@
 module Substitution (Subst(Subst), domain, empty, single, apply, compose, restrictTo) where
 
 import Type
-
 import PrettyPrinting
-
 import Vars
-import Data.List
+import ListFunctions
 import Test.QuickCheck
 
 data Subst = Subst [(VarName, Term)]

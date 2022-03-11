@@ -1,9 +1,7 @@
 module Umbenennung(rename) where
 
 import Type
-
 import Vars
-
 import Substitution
 
 -- GrundIdee: Nehme alle Variablen, erstelle "Umbenennungssubstitutionen" und wende sie auf alle Terme an

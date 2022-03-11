@@ -1,7 +1,7 @@
 module PrettyPrinting (Pretty, pretty) where
 
 import Type
-import Data.List
+import ListFunctions
 
 class Pretty a where
     pretty :: a -> String
@@ -9,10 +9,6 @@ class Pretty a where
 instance Pretty Term where
     -- Simple gets the name of the variable.
     pretty (Var (VarName a)) = a
-
-    -- The list cases.
-    --pretty (Comb "." ts ) = if (last ts) == (Comb "[]" []) then "bro" else "yo"
-
     -- Case that there is only the functor for the term
     pretty (Comb n []) = n
     -- Case that the term is made out of multiple terms, using intercalate to integrate the ", " between the terms.
