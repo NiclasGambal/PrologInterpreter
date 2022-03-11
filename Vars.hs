@@ -27,5 +27,4 @@ instance Vars Goal where
 
 -- Creates an endless list of variables matching the pattern of the assignment with lists comprehensions.
 freshVars :: [VarName]
-freshVars = [(VarName (x : [y])) | y <- ['0'..], x <- ['A' .. 'Z']]
---freshVars = [(VarName (x : "")) | x <- ['A' .. 'Z']] ++ [(VarName (x : [y])) | y <- ['0'..], x <- ['A' .. 'Z']]
+freshVars = [(VarName (x : "")) | x <- ['A' .. 'Z']] ++ [(VarName (x : [y])) | y <- ['0'..], x <- ['A' .. 'Z']]
