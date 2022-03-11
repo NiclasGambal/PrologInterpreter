@@ -5,16 +5,20 @@ import SLD
 import Parser
 import Substitution
 import PrettyPrinting
+import GHC.IO.Handle
+import System.IO
 
 main :: IO ()
 main = do
-    putStr "Welcome to your personal Prolog Interpreter!\n\n"
-    putStr "Type \":h\" for help.\n"
+    putStrLn "Welcome to your personal Prolog Interpreter!\n"
+    putStrLn "Type \":h\" for help.\n"
+    
     repl_loop (Prog []) dfs
 
 repl_loop :: Prog -> Strategy -> IO ()
 repl_loop prog strat = do
-    putStr "?- "
+    putStr "-? "
+    hFlush stdout
     str <- getLine
     eval_loop prog strat str
 
@@ -32,11 +36,12 @@ eval_loop prog strat str = do
 
 returnResults :: [Subst] -> IO ()
 returnResults [] = do
-    putStr "false."
+    putStrLn "false."
     return ()
 returnResults (s:ss) = do
-    putStr ((pretty s) ++ " ")
-    cmd <- getLine 
+    putStrLn ((pretty s) ++ ",")
+    hFlush stdout
+    cmd <- getLine
     parseInput cmd ss
     return ()
 
@@ -46,10 +51,7 @@ parseInput ('.':_) _ = do
 parseInput (';':_) [] = do
     putStrLn "false."
     return ()
-parseInput ";" (s:ss) = returnResults ss
-parseInput (';':xs) (s:ss) = do
-    putStrLn (pretty s)
-    parseInput xs ss
+parseInput ";" s = returnResults s
 parseInput _ _ = do
     putStrLn "Error!"
     return ()
@@ -69,9 +71,9 @@ eval _ _ ('q':_) = do
 eval prog _ "s dfs" = do
     putStrLn "dfs!"
     repl_loop prog dfs
---eval prog _ "s bfs" = do
---    putStrLn "bfs!"
---    repl_loop prog bfs
+eval prog _ "s bfs" = do
+    putStrLn "bfs!"
+    repl_loop prog bfs
 eval prog strat ('l':' ':file) = do
     x <- parseFile file
     case x of
