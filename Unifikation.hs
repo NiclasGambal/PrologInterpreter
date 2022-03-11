@@ -25,4 +25,4 @@ unify t1 t2 = unifyAkk t1 t2 (ds t1 t2)
     unifyAkk _  _  _                     = Nothing
     combineUnify :: Subst -> Maybe Subst -> Maybe Subst
     combineUnify _ Nothing = Nothing
-    combineUnify s1 (Just s2) = Just (compose s1 s2)
+    combineUnify s1 (Just s2) = Just (compose s2 s1)

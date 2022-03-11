@@ -8,7 +8,6 @@ import Substitution
 
 import Unifikation
 import PrettyPrinting
-import System.Win32 (GlobalAllocFlags)
 
 data SLDTree = Node Goal [(Subst, SLDTree)]
     deriving Show
@@ -41,5 +40,11 @@ goal1 = Goal [(Comb "p" [(Var (VarName "S")),(Comb "b" [])])]
 term1 :: Term
 term1 =  Comb "p" [((Comb "b" [])),(Comb "b" [])]
 
+term2 :: Term 
+term2 = Comb "p" [(Var (VarName "S")),(Comb "b" [])]
+
 rule1 :: Rule
 rule1 = (Rule (Comb "p" [(Var (VarName "X")),(Var (VarName "Z"))]) [(Comb "q" [(Var (VarName "X")),(Var (VarName "Y"))]),(Comb "p" [(Var (VarName "Y")),(Var (VarName "Z"))])])
+
+rule2 :: Term 
+rule2 = Comb "p" [(Var (VarName "X")),(Var (VarName "X"))] 
