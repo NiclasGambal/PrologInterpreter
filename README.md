@@ -12,8 +12,8 @@ It should compile without errors, since u included all other file in your direct
 - Solve SLD trees with different strategies.
 - Supports different commands.
 ## Commands
-``` :h ``` To display all possible commands.
-``` :l <file> ``` To load a prolog program out of your directory.
-``` :q ``` Quit the interpreter.
+- ``` :h ``` To display all possible commands.
+- ``` :l <file> ``` To load a prolog program out of your directory.
+- ``` :q ``` Quit the interpreter.
 ## Contributors
 Niclas Gambal & Claas Nitschke
