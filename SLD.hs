@@ -5,6 +5,7 @@ import Vars
 import Umbenennung
 import Substitution
 import Unifikation
+import PrettyPrinting
 
 data SLDTree = Node Goal [(Subst, SLDTree)]
     deriving Show
@@ -48,8 +49,25 @@ bfs (Node g kn) = map (\(s,_) -> (restrictTo s (allVars g))) (filter (\(_,Node (
 solveWith :: Prog -> Goal -> Strategy -> [Subst]
 solveWith p g strat = strat (sld p g)
 
+{-
 prog1 :: Prog
 prog1 = Prog [(Rule (Comb "p" [(Var (VarName "X")),(Var (VarName "Z"))]) [(Comb "q" [(Var (VarName "X")),(Var (VarName "Y"))]),(Comb "p" [(Var (VarName "Y")),(Var (VarName "Z"))])]),(Rule (Comb "p" [(Var (VarName "X")),(Var (VarName "X"))]) []),(Rule (Comb "q" [(Comb "a" []),(Comb "b" [])]) [])]
 
 goal1 :: Goal
 goal1 = Goal [(Comb "p" [(Var (VarName "S")),(Comb "b" [])])]
+
+instance Pretty SLDTree where
+    pretty (Node g []) = pretty g
+    pretty (Node g nodes) = pretty g ++ prettyhelper (Node g nodes) 1
+       
+
+prettyhelper :: SLDTree -> Int -> String
+prettyhelper (Node _ []) n = []
+prettyhelper (Node g ((s,t):rs)) n = "\n+-- " ++ pretty (s) ++"\n|   " ++ (prettyIntoDeep t) ++ "\n" ++ (prettyhelper (Node g rs) n) 
+    where prettyIntoDeep (Node goal []) = (pretty goal)
+          prettyIntoDeep node =  "|   " ++ (pretty node) ++ "\n"
+
+printSpaces :: Int -> String
+printSpaces n | n > 0 = "|   " ++ (printSpaces (n-1))
+              | otherwise = ""
+-}
