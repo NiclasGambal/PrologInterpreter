@@ -33,21 +33,3 @@ tryRule vn p (Goal ts) (Rule rHead rTail) t = case unify rHead t of
 dontBeAMaybeSubst :: Maybe Subst -> Subst
 dontBeAMaybeSubst Nothing    = empty
 dontBeAMaybeSubst (Just sub) = sub
-
-prog1 :: Prog
-prog1 = Prog [(Rule (Comb "p" [(Var (VarName "X")),(Var (VarName "Z"))]) [(Comb "q" [(Var (VarName "X")),(Var (VarName "Y"))]),(Comb "p" [(Var (VarName "Y")),(Var (VarName "Z"))])]),(Rule (Comb "p" [(Var (VarName "X")),(Var (VarName "X"))]) []),(Rule (Comb "q" [(Comb "a" []),(Comb "b" [])]) [])]
-
-goal1 :: Goal
-goal1 = Goal [(Comb "p" [(Var (VarName "S")),(Comb "b" [])])]
-
-term1 :: Term
-term1 =  Comb "p" [((Comb "b" [])),(Comb "b" [])]
-
-term2 :: Term
-term2 = Comb "p" [(Var (VarName "S")),(Comb "b" [])]
-
-rule1 :: Rule
-rule1 = (Rule (Comb "p" [(Var (VarName "X")),(Var (VarName "Z"))]) [(Comb "q" [(Var (VarName "X")),(Var (VarName "Y"))]),(Comb "p" [(Var (VarName "Y")),(Var (VarName "Z"))])])
-
-rule2 :: Term
-rule2 = Comb "p" [(Var (VarName "X")),(Var (VarName "X"))]
