@@ -5,7 +5,7 @@ import Vars
 import Umbenennung
 import Substitution
 import Unifikation
-import PrettyPrinting
+--import PrettyPrinting
 
 data SLDTree = Node Goal [(Subst, SLDTree)]
     deriving Show
@@ -26,6 +26,18 @@ tryRule vn p (Goal ts) (Rule rHead rTail) t = case unify rHead t of
                                                 Nothing -> []
                                                 Just s ->  [(s, sldRename (vn ++ (allVars (Rule rHead rTail))) p (Goal (map (apply s) (filter (/= t) ts ++ rTail))))]
 
+-- Here is the Version with only renaming the new Rule. It work fine, but we are affraid of possible problems with big SLDTrees
+{-
+sld :: Prog -> Goal -> SLDTree
+sld _            (Goal []) = Node (Goal []) []
+-- versuche, das Regelset auf jeden Term anzuwenden
+sld (Prog rules) (Goal (t:ts)) = Node (Goal (t:ts)) (concatMap (\oneRule -> (tryRule (Prog rules) (Goal (t:ts)) (rename ((allVars (Prog rules)) ++ (allVars (Goal (t:ts)))) oneRule) t)) rules)
+
+tryRule:: Prog -> Goal -> Rule -> Term -> [(Subst, SLDTree)]
+tryRule p (Goal ts) (Rule rHead rTail) t = case unify rHead t of
+                                                Nothing -> []
+                                                Just s ->  [(s, sld p (Goal (map (apply s) (filter (/= t) ts ++ rTail))))]
+-}
 
 -- Method to take the Substitution out of a Maybe Substitution
 dontBeAMaybeSubst :: Maybe Subst -> Subst
@@ -59,11 +71,11 @@ goal1 = Goal [(Comb "p" [(Var (VarName "S")),(Comb "b" [])])]
 instance Pretty SLDTree where
     pretty (Node g []) = pretty g
     pretty (Node g nodes) = pretty g ++ prettyhelper (Node g nodes) 1
-       
+
 
 prettyhelper :: SLDTree -> Int -> String
 prettyhelper (Node _ []) n = []
-prettyhelper (Node g ((s,t):rs)) n = "\n+-- " ++ pretty (s) ++"\n|   " ++ (prettyIntoDeep t) ++ "\n" ++ (prettyhelper (Node g rs) n) 
+prettyhelper (Node g ((s,t):rs)) n = "\n+-- " ++ pretty (s) ++"\n|   " ++ (prettyIntoDeep t) ++ "\n" ++ (prettyhelper (Node g rs) n)
     where prettyIntoDeep (Node goal []) = (pretty goal)
           prettyIntoDeep node =  "|   " ++ (pretty node) ++ "\n"
 
