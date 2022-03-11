@@ -108,3 +108,6 @@ eval prog strat ('l':' ':file) = do
 eval prog strat ('p':_) = do
     putStrLn (pretty prog)
     repl_loop prog strat
+eval prog strat _ = do 
+    putStrLn "Not implemented yet. For further information press :h"
+    repl_loop prog strat
